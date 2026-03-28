@@ -401,17 +401,23 @@ int main(int argc, char const *argv[])
         {
             pthread_mutex_lock(&process_history_mutex);
             process_history->shutdown = TRUE;
+            int active_processes = FALSE;
             Process* current = process_history->head;
             while (current != NULL)
             {
-                if (current->running) kill(current->pid, SIGKILL);
+                if (current->running) 
+                {
+                    kill(current->pid, SIGKILL);
+                    active_processes = TRUE;
+                }
                 current = current->next;
             }
             pthread_mutex_unlock(&process_history_mutex);
 
-            if (current == NULL)
+            if (!active_processes)
             {
                 printf("No hay procesos activos para apagar.\n");
+                system_shutdown = TRUE;
             }
             else
             {
