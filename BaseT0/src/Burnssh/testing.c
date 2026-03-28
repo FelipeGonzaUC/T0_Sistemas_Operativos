@@ -407,7 +407,7 @@ int main(int argc, char const *argv[])
             {
                 if (current->running) 
                 {
-                    kill(current->pid, SIGKILL);
+                    kill(current->pid, SIGINT);
                     active_processes = TRUE;
                 }
                 current = current->next;
@@ -421,8 +421,9 @@ int main(int argc, char const *argv[])
             }
             else
             {
+
                 printf("Sistema apagado. Todos los procesos han sido terminados.\n");
-                for (int i = 0; i < 10; i++)
+                /*for (int i = 0; i < 10; i++)
                 {
                     if (current_processes[i] != NULL && current_processes[i]->running)
                     {
@@ -430,7 +431,9 @@ int main(int argc, char const *argv[])
                         signal(SIGALRM, termination_handler);
                         alarm(10);
                     }
-                }
+                }*/
+                signal(SIGALRM, termination_handler);
+                alarm(10);
             }
         }
         free_user_input(input);
